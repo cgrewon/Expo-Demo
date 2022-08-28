@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
+import { AvenirText } from '../components/StyledComponents';
 
-import { Text, View } from '../components/Themed';
+import { View } from '../components/Themed';
 
 export default function TabCalendarScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Calendar Screen</Text>
+      <AvenirText style={styles.title}>Calendar Screen</AvenirText>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       
     </View>

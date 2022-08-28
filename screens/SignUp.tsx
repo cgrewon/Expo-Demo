@@ -2,30 +2,117 @@ import React, { useState, useEffect } from "react";
 
 import {
   StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Image,
   ScrollView,
+  TextInput,
 } from "react-native";
-import { Input, Button, Switch } from "@rneui/themed";
+import { Switch } from "@rneui/themed";
 
-import { Text, View } from "../components/Themed";
+import { View } from "../components/Themed";
 import { RootStackScreenProps } from "../types";
+import { ICreateUserResult, IError, IToken } from "../graphql/interfaces";
+import { useMutation } from "@apollo/client";
+import { CreateUserGql } from "../graphql/gql_tags";
+import { BorderRadius } from "../constants/Layout";
+import { useDispatch } from "react-redux";
+import { updateToken } from "../state/actions";
+import { AvenirText, AvenirInput, AvenirButton } from "../components/StyledComponents";
+
+
 const BG1 = require("../assets/images/bg1.png");
 
 export default function SignUpScreen({
   navigation,
 }: RootStackScreenProps<"SignUp">) {
-  const [checked, setChecked] = useState(false);
+
+  const dispatch = useDispatch();
+  
+  const [checked, setChecked] = useState<boolean>(false);
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [unitNumber, setUnitNumber] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [pwd, setPwd] = useState<string>("");
+  
+
+  const [errValidation, setErrValidation] = useState<IError>();
+  const [createUser, { data, loading, error, reset }] =
+    useMutation(CreateUserGql);
+
+  let firstNameRef = React.createRef<TextInput>();
+  let lastNameRef = React.createRef<TextInput>();
+  let unitRef = React.createRef<TextInput>();
+  let emailRef = React.createRef<TextInput>();
+  let pwdRef = React.createRef<TextInput>();
+
+  useEffect(() => {
+    if (data) {
+      const token: IToken = (data as ICreateUserResult)
+        .createUser.token as IToken;
+      dispatch(updateToken(token));
+      navigation.replace("Root");
+    }
+  }, [data]);
 
   const onSignIn = () => {
     navigation.replace("SignIn");
   };
 
   const onSignUp = () => {
-    navigation.replace("Root");
+    reset();
+    if (!validate()) {
+      return;
+    }
+
+    createUser({
+      variables: {
+        email: email,
+        password: pwd,
+        firstName,
+        lastName
+      },
+    });
+
+
+  };
+
+  const validate = (): boolean => {
+    let err: IError|undefined;
+
+    if (!checked) {
+      err = { message: "Please agree Terms of Service and Privacy Policy" };
+    }
+
+    if (!email) {
+      err = { message: "Please agree Terms of Service and Privacy Policy" };
+    }
+
+    if (!firstName) {
+      err = {message: 'First Name required'};
+    }
+    if (!lastName) {
+      err = {message: 'Last Name required'};
+    }
+    if (!pwd) {
+      err = {message: 'Password required'};
+    }
+
+    
+    if (err) {
+      setErrValidation(err);
+      return false
+    };
+    return true;
+  };
+
+  const onChangeText = (
+    value: string,
+    setCallback: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    setErrValidation(undefined);
+    setCallback(value);
   };
 
   return (
@@ -36,55 +123,90 @@ export default function SignUpScreen({
       <ScrollView contentContainerStyle={styles.container} bounces={false}>
         <Image source={BG1} style={styles.imgBack} />
         <View style={styles.mainView}>
-          <Text style={styles.title}>Create an account</Text>
+          <AvenirText style={styles.title}>Create an account</AvenirText>
           <View style={styles.row}>
-            <Input
+            <AvenirInput
+              ref={firstNameRef}
               placeholder="First Name"
               containerStyle={{ ...styles.inputContainer, width: "50%" }}
-              // errorMessage="Invalid password."
+              onChangeText={(value) => {
+                onChangeText(value, setFirstName);
+              }}
+              value={firstName}
+              onSubmitEditing={() => {
+                lastNameRef.current?.focus();
+              }}
             />
-            <Input
+            <AvenirInput
+              ref={lastNameRef}
               placeholder="Last Name"
               containerStyle={{ ...styles.inputContainer, width: "50%" }}
-              // errorMessage="Invalid password."
+              onChangeText={(value) => {
+                onChangeText(value, setLastName);
+              }}
+              value={lastName}
+              onSubmitEditing={() => {
+                unitRef.current?.focus();
+              }}
             />
           </View>
-          <Input
+          <AvenirInput
+            ref={unitRef}
             placeholder="Unit Number"
             keyboardType="numbers-and-punctuation"
             containerStyle={styles.inputContainer}
             errorStyle={{ color: "red" }}
-            // errorMessage="Invalid email."
+            onChangeText={(value) => {
+              onChangeText(value, setUnitNumber);
+            }}
+            value={unitNumber}
+            onSubmitEditing={() => {
+              emailRef.current?.focus();
+            }}
           />
-          <Input
+          <AvenirInput
+            ref={emailRef}
             placeholder="Email"
             keyboardType="email-address"
             containerStyle={styles.inputContainer}
             errorStyle={{ color: "red" }}
-            // errorMessage="Invalid email."
+            onChangeText={(value) => {
+              onChangeText(value, setEmail);
+            }}
+            value={email}
+            onSubmitEditing={() => {
+              pwdRef.current?.focus();
+            }}
           />
 
-          <Input
+          <AvenirInput
+            ref={pwdRef}
             placeholder="Password"
             containerStyle={styles.inputContainer}
             secureTextEntry={true}
-            // errorMessage="Invalid password."
+            onChangeText={(value) => {
+              onChangeText(value, setPwd);
+            }}
+            value={pwd}
           />
 
-          <View style={{ ...styles.row, paddingHorizontal: 13 }}>
-            <Text style={{ ...styles.grayLabel, width: "75%" }}>
+          <View style={{ ...styles.row, paddingHorizontal: 13, marginBottom: 10 }}>
+            <AvenirText style={{ ...styles.grayLabel, width: "75%" }}>
               I agree to the Amenify Terms of Service and Privacy Policy
-            </Text>
+            </AvenirText>
             <Switch
               value={checked}
               onValueChange={(value) => setChecked(value)}
             />
           </View>
-
+          {errValidation && (
+            <AvenirText style={styles.errTitle}>{errValidation.message}</AvenirText>
+          )}
+          {error && <AvenirText style={styles.errTitle}>{error.message}</AvenirText>}
           <View style={styles.buttonRowView}>
             <View style={styles.btnSignInWrapper}>
-              <Text style={styles.grayLabel}>Already have an account?</Text>
-              <Button
+              <AvenirText style={styles.grayLabel}>Already have an account?</AvenirText>
+              <AvenirButton
                 title="Sign In"
                 titleStyle={styles.signupBtnTitle}
                 buttonStyle={styles.btnSignupContainer}
@@ -93,10 +215,11 @@ export default function SignUpScreen({
               />
             </View>
 
-            <Button
+            <AvenirButton
               title="Sign Up"
               buttonStyle={styles.btnSignInContainer}
               onPress={onSignUp}
+              loading={loading}
             />
           </View>
         </View>
@@ -105,8 +228,6 @@ export default function SignUpScreen({
   );
 }
 
-const BorderRadius = 20;
-const AccentColor = "#2e78b7";
 
 const styles = StyleSheet.create({
   keyboardContainer: {
@@ -184,5 +305,10 @@ const styles = StyleSheet.create({
     color: "gray",
     fontSize: 12,
     fontWeight: "400",
+  },
+  errTitle: {
+    color: "red",
+    fontSize: 12,
+    paddingHorizontal: 10,
   },
 });

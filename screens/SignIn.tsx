@@ -1,25 +1,91 @@
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
   Image,
 } from "react-native";
-import { Input, Button } from "@rneui/themed";
-
 import { Text, View } from "../components/Themed";
 import { RootStackScreenProps } from "../types";
 const BG1 = require("../assets/images/bg1.png");
 
+import { useMutation } from "@apollo/client";
+import { CreateTokenGql } from "../graphql/gql_tags";
+import {
+  ICreateTokenByPasswordResult,
+  IError,
+  IToken,
+} from "../graphql/interfaces";
+import { TextInput } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { updateToken } from "../state/actions";
+import { AvenirButton, AvenirInput, AvenirText } from "../components/StyledComponents";
+
 export default function SignInScreen({
   navigation,
 }: RootStackScreenProps<"SignIn">) {
+  const dispatch = useDispatch();
+  const fetchingUser = useSelector((state: {fetchingUser: boolean}) => state.fetchingUser);
 
-  const onSignUp = ()=>{
-    navigation.replace('SignUp')
-  }
+  const [email, setEmail] = useState<string>("");
+  const [pwd, setPwd] = useState<string>("");
+  const pwdRef = React.createRef<TextInput>();
+  const [errValidation, setErrValidation] = useState<IError>();
+  const [createToken, { data, loading, error, reset }] =
+    useMutation<ICreateTokenByPasswordResult>(CreateTokenGql);
+
+  useEffect(() => {
+    if (data) {
+      const token: IToken = (data as ICreateTokenByPasswordResult)
+        .createTokenByPassword.token as IToken;
+      dispatch(updateToken(token));
+    }
+  }, [data]);
+
+  const onSignUp = () => {
+    navigation.replace("SignUp");
+  };
+
+  const validate = (): boolean => {
+    let err: IError | undefined;
+
+    if (!email) {
+      err = {
+        message: "Required email.",
+      };
+    }
+
+    if (!pwd) {
+      err = {
+        message: "Required password.",
+      };
+    }
+    setErrValidation(err);
+    return !err;
+  };
+
+  const onSignIn = () => {
+    reset();
+    if (validate() == false) {
+      return;
+    }
+
+    createToken({
+      variables: {
+        email: email,
+        password: pwd,
+      },
+    });
+  };
+
+  const onChangeText = (
+    value: string,
+    setCallback: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    setErrValidation(undefined);
+    setCallback(value);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -29,31 +95,51 @@ export default function SignInScreen({
       <ScrollView contentContainerStyle={styles.container} bounces={false}>
         <Image source={BG1} style={styles.imgBack} />
         <View style={styles.mainView}>
-          <Text style={styles.title}>Sign In</Text>
-          <Input
+          <AvenirText style={styles.title}>Sign In</AvenirText>
+          <AvenirInput
             placeholder="Email"
             keyboardType="email-address"
             containerStyle={styles.inputContainer}
-            errorStyle={{ color: "red" }}
-            // errorMessage="Invalid email."
+            onChangeText={(value) => {
+              onChangeText(value, setEmail);
+            }}
+            value={email}
+            onSubmitEditing={() => {
+              pwdRef.current?.focus();
+            }}
           />
 
-          <Input
+          <AvenirInput
+            ref={pwdRef}
             placeholder="Password"
             containerStyle={styles.inputContainer}
             secureTextEntry={true}
-            // errorMessage="Invalid password."
+            onChangeText={(value) => {
+              onChangeText(value, setPwd);
+            }}
+            value={pwd}
+            onSubmitEditing={() => {
+              onSignIn();
+            }}
           />
-
+          {errValidation && (
+            <AvenirText style={styles.errTitle}>{errValidation.message}</AvenirText>
+          )}
+          {error && <Text style={styles.errTitle}>{error.message}</Text>}
           <View style={styles.buttonRowView}>
-            <Button
+            <AvenirButton
               title="Sign Up"
               titleStyle={styles.signupBtnTitle}
               buttonStyle={styles.btnSignupContainer}
               type="clear"
               onPress={onSignUp}
             />
-            <Button title="Sign In" buttonStyle={styles.btnSignInContainer} />
+            <AvenirButton
+              title="Sign In"
+              buttonStyle={styles.btnSignInContainer}
+              onPress={onSignIn}
+              loading={loading || fetchingUser}
+            />
           </View>
         </View>
       </ScrollView>
@@ -62,7 +148,6 @@ export default function SignInScreen({
 }
 
 const BorderRadius = 20;
-const AccentColor = "#2e78b7";
 
 const styles = StyleSheet.create({
   keyboardContainer: {
@@ -128,5 +213,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     height: 48,
     borderRadius: 24,
+  },
+  errTitle: {
+    color: "red",
+    fontSize: 12,
+    paddingHorizontal: 10,
   },
 });
