@@ -9,16 +9,15 @@ This is Expo test project.
 
 ## Tech stacks:
 
-
-
 - [Expo](https://docs.expo.dev/)
-- Typescript
+- Typescript 
+- [React Navigation](https://reactnavigation.org)
 - redux
 - redux-persist
 - redux-thunk
 - [React Native Elements](https://reactnativeelements.com/)
 - graphql
-- @apollo/client
+- [@apollo/client](http://apollo.io)
 
 
 
