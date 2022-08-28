@@ -1,6 +1,6 @@
 # ExpoTest
 
-This is Expo test project.
+This is Expo test project built by Chi.
 
 ## Result
 
