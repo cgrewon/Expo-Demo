@@ -2,16 +2,16 @@
 
 This is Expo test project.
 
-##Tech stacks:
+## Tech stacks:
 
 
 
-- Expo
+- [Expo](https://docs.expo.dev/)
 - Typescript
 - redux
 - redux-persist
 - redux-thunk
-- [React Native Elements] (https://reactnativeelements.com/)
+- [React Native Elements](https://reactnativeelements.com/)
 - graphql
 - @apollo/client
 
