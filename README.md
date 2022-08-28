@@ -4,18 +4,18 @@ This is Expo test project.
 
 ##Tech stacks:
 
-```code
 
-Expo
-Typescript
-redux
-redux-persist
-redux-thunk
-[React Native Elements] (https://reactnativeelements.com/)
-graphql
-@apollo/client
 
-```
+*Expo
+*Typescript
+*redux
+*redux-persist
+*redux-thunk
+*[React Native Elements] (https://reactnativeelements.com/)
+*graphql
+*@apollo/client
+
+
 
 ## Install packages:
 ```shell
