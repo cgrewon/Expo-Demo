@@ -6,14 +6,14 @@ This is Expo test project.
 
 
 
-*Expo
-*Typescript
-*redux
-*redux-persist
-*redux-thunk
-*[React Native Elements] (https://reactnativeelements.com/)
-*graphql
-*@apollo/client
+- Expo
+- Typescript
+- redux
+- redux-persist
+- redux-thunk
+- [React Native Elements] (https://reactnativeelements.com/)
+- graphql
+- @apollo/client
 
 
 
