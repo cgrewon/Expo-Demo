@@ -2,6 +2,11 @@
 
 This is Expo test project.
 
+## Result
+
+![screenshot](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+
+
 ## Tech stacks:
 
 
@@ -33,3 +38,5 @@ $ yarn ios
 ```shell
 $ yarn android
 ```
+
+
