@@ -4,7 +4,7 @@ This is Expo test project.
 
 ## Result
 
-![screenshot](https://github.com/[username]/[reponame]/blob/[branch]/image.jpg?raw=true)
+![screenshot](https://github.com/cgrewon/ExpoTest/blob/main/assets/images/screenshot.png)
 
 
 ## Tech stacks:
