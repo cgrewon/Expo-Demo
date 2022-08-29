@@ -1,7 +1,7 @@
 import React from "react";
 import { ColorSchemeName, Pressable, View, Text } from "react-native";
 import { useDispatch } from "react-redux";
-import { cleanToken, cleanUser } from "../state/actions";
+import { cleanToken, cleanUser } from "../../state/actions";
 
 export default function HeaderRight({ navigation }: { navigation: any }) {
 

@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { AvenirText } from '../components/StyledComponents';
 
 import { View } from '../components/Themed';
-import { RootTabScreenProps } from '../types';
+import { RootTabScreenProps } from '../constants/types';
 
 export default function TabHomeScreen({ navigation }: RootTabScreenProps<'TabHome'>) {
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import { ColorSchemeName, Pressable, View, Text } from "react-native";
 import { useSelector } from "react-redux";
-import { IMyUser, IToken } from "../graphql/interfaces";
+import { IMyUser, IToken } from "../../graphql/interfaces";
 
 export default function HeaderLeft() {
 

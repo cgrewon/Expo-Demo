@@ -11,7 +11,7 @@ import {
 import { Switch } from "@rneui/themed";
 
 import { View } from "../components/Themed";
-import { RootStackScreenProps } from "../types";
+import { RootStackScreenProps } from "../constants/types";
 import { ICreateUserResult, IError, IToken } from "../graphql/interfaces";
 import { useMutation } from "@apollo/client";
 import { CreateUserGql } from "../graphql/gql_tags";

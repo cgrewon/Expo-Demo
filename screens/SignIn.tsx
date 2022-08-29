@@ -7,7 +7,7 @@ import {
   Image,
 } from "react-native";
 import { Text, View } from "../components/Themed";
-import { RootStackScreenProps } from "../types";
+import { RootStackScreenProps } from "../constants/types";
 const BG1 = require("../assets/images/bg1.png");
 
 import { useMutation } from "@apollo/client";

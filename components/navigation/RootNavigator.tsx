@@ -4,7 +4,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import SignInScreen from "../../screens/SignIn";
 import SignUpScreen from "../../screens/SignUp";
-import { RootStackParamList } from "../../types";
+import { RootStackParamList } from "../../constants/types";
 
 import { useLazyQuery } from "@apollo/client";
 import { useDispatch, useSelector } from "react-redux";

@@ -6,9 +6,9 @@ import useColorScheme from "../../hooks/useColorScheme";
 import TabHomeScreen from "../../screens/TabHomeScreen";
 import TabSettingScreen from "../../screens/TabSettingScreen";
 import TabCalendarScreen from "../../screens/TabCalendarScreen";
-import { RootTabParamList, RootTabScreenProps } from "../../types";
-import HeaderLeft from "../../components/HeaderLeft";
-import HeaderRight from "../../components/HeaderRight";
+import { RootTabParamList, RootTabScreenProps } from "../../constants/types";
+import HeaderLeft from "./HeaderLeft";
+import HeaderRight from "./HeaderRight";
 import TabBarIcon from "./TabBarIcon";
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
