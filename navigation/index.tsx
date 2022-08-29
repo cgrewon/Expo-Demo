@@ -33,7 +33,7 @@ export default function Navigation({
     return {
       headers: {
         ...headers,
-        authorization: token?.accessToken,
+        authorization: 'Bearer ' + token?.accessToken,
       },
     };
   });
